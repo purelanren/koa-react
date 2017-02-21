@@ -1,7 +1,7 @@
-var path = require('path')
-var webpack = require('webpack')
-var autoprefixer = require('autoprefixer')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
+const autoprefixer = require('autoprefixer')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   devtool: ['source-map'],

@@ -1,8 +1,8 @@
-var path = require('path')
-var webpack = require('webpack')
-var autoprefixer = require('autoprefixer')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
+const autoprefixer = require('autoprefixer')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: {

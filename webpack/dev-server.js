@@ -1,8 +1,8 @@
-var path = require('path')
-var webpack = require('webpack')
-var WebpackDevServer = require('webpack-dev-server')
-var open = require('open')
-var webpackConfig = require('./dev.config')
+const path = require('path')
+const webpack = require('webpack')
+const WebpackDevServer = require('webpack-dev-server')
+const open = require('open')
+const webpackConfig = require('./dev.config')
 
 // live
 const server = new WebpackDevServer(webpack(webpackConfig), {
