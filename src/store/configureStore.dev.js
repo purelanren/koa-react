@@ -1,12 +1,13 @@
 import { browserHistory } from 'react-router'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { routerMiddleware } from 'react-router-redux'
+import thunk from 'redux-thunk'
 import Immutable from 'immutable'
 import createLogger from 'redux-logger'
 import rootReducer from '../reducers'
 
 const logger = createLogger({
-  stateTransformer: (state) => {
+  stateTransformer: state => {
     const newState = {}
     for (const i of Object.keys(state)) {
       if (Immutable.Iterable.isIterable(state[i])) {
@@ -21,7 +22,7 @@ const logger = createLogger({
 
 export default function configureStore(initialState = {}) {
   const store = createStore(rootReducer, initialState, compose(
-    applyMiddleware(routerMiddleware(browserHistory), logger),
+    applyMiddleware(thunk, routerMiddleware(browserHistory), logger),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   ))
 

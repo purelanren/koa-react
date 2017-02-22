@@ -19,6 +19,7 @@
   "homepage": "https://github.com/purelanren/koa-react#readme",
   "dependencies": {
     "immutable": "^3.8.1",
+    "isomorphic-fetch": "^2.2.1",
     "koa": "^1.2.5",
     "koa-compress": "^1.0.9",
     "koa-static": "^2.1.0",
@@ -29,7 +30,9 @@
     "react-router": "^2.8.1",
     "react-router-redux": "^4.0.6",
     "redux": "^3.6.0",
-    "redux-logger": "^2.8.1"
+    "redux-action-tools": "^1.2.0",
+    "redux-logger": "^2.8.1",
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.5.1",
