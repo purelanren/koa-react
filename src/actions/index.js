@@ -1,3 +1,7 @@
 import * as hello from './hello'
+import * as async from './async'
 
-export default hello
+export {
+  hello,
+  async
+}

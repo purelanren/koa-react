@@ -1,4 +1,9 @@
-export const serverActions = actions => target => Object.assign(target, { serverActions: actions })
+export const serverActions = actions => target => {
+  if (!Array.isArray(actions)) {
+    throw new Error('actions must be array')
+  }
+  return Object.assign(target, { serverActions: actions })
+}
 
 export const loadOnServer = (dispatch, components) => {
   let allActions = []

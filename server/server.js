@@ -47,12 +47,11 @@ web.use(function* isomorphic(next) {
             <RouterContext {...renderProps} />
           </Provider>
         )
-
         const initialSate = `<script>window.$INITIAL_STATE = ${JSON.stringify(store.getState())}</script>`
-
         html = html.replace('@reactString', reactString).replace('<script type="text/html"></script>', initialSate)
       }).catch(err => {
         console.error(err)
+        html = html.replace('@reactString', '').replace('<script type="text/html"></script>', '')
       })
     })
 

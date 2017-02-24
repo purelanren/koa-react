@@ -9,7 +9,7 @@ export default function (url, option) {
       'Content-Type': 'application/json'
     }
   }
-  if (option.data) {
+  if (option && option.data) {
     finalOption.method = 'post'
     finalOption.body = JSON.stringify(option.data)
   }

@@ -7,21 +7,27 @@ import createLogger from 'redux-logger'
 import rootReducer from '../reducers'
 
 const logger = createLogger({
-  stateTransformer: state => {
-    const newState = {}
-    for (const i of Object.keys(state)) {
-      if (Immutable.Iterable.isIterable(state[i])) {
-        newState[i] = state[i].toJS()
-      } else {
-        newState[i] = state[i]
-      }
-    }
-    return newState
-  }
+  stateTransformer: state => Immutable.fromJS(state).toJS()
 })
 
 export default function configureStore(initialState = {}) {
-  const store = createStore(rootReducer, initialState, compose(
+  let finalState = initialState
+  // 将JSON转为符合预期的Immutable数据结构
+  if (initialState) {
+    finalState = {}
+    Object.keys(initialState).forEach(key => {
+      if (key === 'routing') {
+        finalState[key] = initialState[key]
+      } else {
+        const subState = {}
+        Object.keys(subState).forEach(subKey => {
+          subState[subKey] = Immutable.fromJS(initialState[key][subKey])
+        })
+        finalState[key] = subState
+      }
+    })
+  }
+  const store = createStore(rootReducer, finalState, compose(
     applyMiddleware(thunk, routerMiddleware(browserHistory), logger),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   ))
