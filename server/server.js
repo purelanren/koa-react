@@ -1,70 +1,70 @@
 'use strict'
 
-const fs = require('fs');
-const path = require('path');
-const koa = require('koa');
-const serve = require('koa-static');
-const compress = require('koa-compress');
-const config = require('../config')
-const routes = require('../src/routes').routes
+import fs from 'fs'
+import path from 'path'
+import koa from 'koa'
+import serve from 'koa-static'
+import compress from 'koa-compress'
+import React from 'react'
+import ReactDOM from 'react-dom/server'
+import { RouterContext, match } from 'react-router'
+import { Provider } from 'react-redux'
+import config from '../config'
+import configureStore from '../src/store/configureStore.server'
+import { routes } from '../src/routes'
+import { loadOnServer } from '../libs/serverRender'
 
-
-const web = koa();
-const html = fs.readFileSync(path.resolve(__dirname, '../dist/index.html'), {
+const web = koa()
+let html = fs.readFileSync(path.resolve(__dirname, '../dist/index.html'), {
   encoding: 'utf-8'
-});
+})
+const store = configureStore({})
 
-web.use(compress());
+web.use(compress())
 
-web.use(function* asset(next) {
-  if (!/^\/(css|img|js)\/.*$/.test(this.path)) {
-    this.body = html;
+web.use(function* isomorphic(next) {
+  if (/^\/(css|img|js)\/.*$/.test(this.path)) {
+    yield next
   } else {
-    yield next;
+    let beforeRender
+    match({ routes, location: this.originalUrl }, (error, redirectLocation, renderProps) => {
+      if (redirectLocation) {
+        this.redirect(redirectLocation.pathname + redirectLocation.search, '/')
+        return
+      }
+
+      if (error) {
+        this.throw(error, 500)
+      }
+
+      if (!renderProps) {
+        this.throw('not found', 404)
+      }
+
+      beforeRender = loadOnServer(store.dispatch, renderProps.components).then(() => {
+        const reactString = ReactDOM.renderToString(
+          <Provider store={store}>
+            <RouterContext {...renderProps} />
+          </Provider>
+        )
+
+        const initialSate = `<script>window.$INITIAL_STATE = ${JSON.stringify(store.getState())}</script>`
+
+        html = html.replace('@reactString', reactString).replace('<script type="text/html"></script>', initialSate)
+      }).catch(err => {
+        console.error(err)
+      })
+    })
+
+    yield beforeRender
+    this.body = html
   }
-});
+})
 
 if (process.env.NODE_ENV === 'test') {
-  web.use(serve(path.resolve(__dirname, '../dist')));
+  web.use(serve('./dist'));
 }
 
-app.use(function *() {
-  let beforeRender = () => {}
-  match({ routes, location: this.originalUrl }, (error, redirectLocation, renderProps) => {
-    if (redirectLocation) {
-      this.redirect(redirectLocation.pathname + redirectLocation.search, '/')
-      return
-    }
+web.listen(config.web.port)
 
-    if (error) {
-      this.throw(error, 500)
-    }
-
-    if (!renderProps) {
-      this.throw('not found', 404)
-    }
-
-    beforeRender = loadOnServer(store.dispatch, renderProps.components).then(() => {
-      const reactString = ReactDOM.renderToString(
-        <Provider store={store}>
-          <RouterContext {...renderProps} />
-        </Provider>
-      )
-
-      const initialSate = `<script>window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())}</script>`
-
-      let template = html.replace('@reactString', reactString)
-      template = template.replace('<script type="text/html"></script>', initialSate)
-      this.type = 'text/html'
-      this.body = template
-    }).catch(err => {
-      console.error(err)
-    })
-  })
-
-  yield beforeRender
-
-
-web.listen(config.web.port);
-
-console.log(`web server listening on port ${config.web.port}`);
+console.log(`web server listening on port ${config.web.port}`)

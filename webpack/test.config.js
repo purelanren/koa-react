@@ -30,10 +30,10 @@ module.exports = {
     extensions: ['', '.js', '.jsx'],
     fallback: [path.join(__dirname, '../node_modules')],
     alias: {
-      'src': path.resolve(__dirname, '../src'),
-      'common': path.resolve(__dirname, '../src/common'),
-      'containers': path.resolve(__dirname, '../src/containers'),
-      'components': path.resolve(__dirname, '../src/components')
+      src: path.resolve(__dirname, '../src'),
+      common: path.resolve(__dirname, '../src/common'),
+      containers: path.resolve(__dirname, '../src/containers'),
+      components: path.resolve(__dirname, '../src/components')
     }
   },
 
@@ -54,7 +54,8 @@ module.exports = {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass'),
         exclude: /node_modules/
-      }, {
+      },
+      {
         test: /\.jsx?$/,
         loader: 'babel',
         exclude: /node_modules/
@@ -63,8 +64,7 @@ module.exports = {
         test: /\.(jpg|png|gif|svg)$/,
         loader: 'url?limit=8192&name=img/[name].[ext]',
         exclude: /node_modules/
-      }
-      ,
+      },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         loader: 'url?limit=8192&name=font/[name].[ext]',
@@ -77,7 +77,7 @@ module.exports = {
     formatter: require('eslint-friendly-formatter')
   },
 
-  postcss: function () {
+  postcss() {
     return [autoprefixer]
   }
 }

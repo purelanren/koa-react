@@ -35,10 +35,10 @@ module.exports = {
     extensions: ['', '.js', '.jsx'],
     fallback: [path.join(__dirname, '../node_modules')],
     alias: {
-      'src': path.resolve(__dirname, '../src'),
-      'common': path.resolve(__dirname, '../src/common'),
-      'containers': path.resolve(__dirname, '../src/containers'),
-      'components': path.resolve(__dirname, '../src/components')
+      src: path.resolve(__dirname, '../src'),
+      common: path.resolve(__dirname, '../src/common'),
+      containers: path.resolve(__dirname, '../src/containers'),
+      components: path.resolve(__dirname, '../src/components')
     }
   },
 
@@ -63,14 +63,11 @@ module.exports = {
         test: /\.jsx?$/,
         loader: 'babel',
         exclude: /node_modules/
-      },
-      {
+      }, {
         test: /\.(jpg|png|gif|svg)$/,
         loader: 'url?limit=8192&name=img/[name].[hash:7].[ext]',
         exclude: /node_modules/
-      }
-      ,
-      {
+      }, {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         loader: 'url?limit=8192&name=font/[name].[hash:7].[ext]',
         exclude: /node_modules/
@@ -82,7 +79,7 @@ module.exports = {
     formatter: require('eslint-friendly-formatter')
   },
 
-  postcss: function () {
+  postcss() {
     return [autoprefixer]
   }
 }

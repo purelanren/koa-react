@@ -10,5 +10,11 @@ export const loadOnServer = (dispatch, components) => {
     }
     return (allActions = allActions.concat(component.WrappedComponent.serverActions))
   })
-  return Promise.all(allActions.map(action => dispatch(action())))
+  return Promise.all(allActions.map(action => {
+    if (typeof action !== 'function') {
+      console.error('action must be a function')
+      return Promise.resolve({})
+    }
+    return dispatch(action())
+  }))
 }
