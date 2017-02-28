@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import Immutable from 'immutable'
-import helloAction from '../../actions'
+import { hello as helloAction } from '../../actions'
 import Time from '../../components/time'
 
 class Hello extends Component {
